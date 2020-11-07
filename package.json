@@ -26,6 +26,6 @@
   },
   "dependencies": {
     "awsdynamoutils": "^1.0.10",
-    "puppeteer": "^5.2.1"
+    "puppeteer": "^5.4.1"
   }
 }
