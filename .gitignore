@@ -66,3 +66,4 @@ typings/
 
 # Google local data
 Google/*
+set_env_vars.sh

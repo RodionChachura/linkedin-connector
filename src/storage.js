@@ -1,16 +1,14 @@
 const fs = require('fs')
 
+const STATE_PATH = './state.json'
+
 class Storage {
-  constructor(){
-    console.log('Storage:constructor()')
+  update(newState) {
+    fs.writeFileSync(STATE_PATH, JSON.stringify(newState));
   }
 
-  setLastDate() {
-
-  }
-
-  getLastDate() {
-
+  get() {
+    return JSON.parse(fs.readFileSync(STATE_PATH))
   }
 }
 
