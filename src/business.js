@@ -1,5 +1,7 @@
 const { getModule } = require('awsdynamoutils')
 
+const storage = require('./storage')
+
 const { paginationAware, projectionExpression } = getModule()
 const scan = paginationAware('scan')
 const USERS_TABLE_NAME = 'pomodoro_users'
@@ -16,14 +18,12 @@ const getNewUsers = (lastDate) =>
   })
 
 class Business {
-  constructor(browser, storage) {
+  constructor(browser) {
     this.browser = browser
-    this.storage = storage
   }
 
   async run() {
-    const state = this.storage.get()
-    const users = await getNewUsers(state.lastDate)
+    const users = await getNewUsers(storage.getLastDate())
     console.log(`New users count: ${users.length}`)
     const orderedUsers = users
       .sort((a, b) => a.registrationDate - b.registrationDate)
@@ -33,6 +33,12 @@ class Business {
 
     for await (const user of orderedUsers) {
       await this.browser.createContact(user.email)
+      const hasLinkedIn = await this.browser.isLinkedInProfileExists()
+      console.log(hasLinkedIn)
+      // if (hasLinkedIn) {
+      //   await this.browser.openLinkedIn()
+      // }
+      // storage.setLastDate(user.registrationDate)
     }
   }
 }

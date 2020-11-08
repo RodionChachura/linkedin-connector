@@ -2,14 +2,16 @@ const fs = require('fs')
 
 const STATE_PATH = './state.json'
 
-class Storage {
-  update(newState) {
-    fs.writeFileSync(STATE_PATH, JSON.stringify(newState));
-  }
+let state = JSON.parse(fs.readFileSync(STATE_PATH))
 
-  get() {
-    return JSON.parse(fs.readFileSync(STATE_PATH))
-  }
+const updateState = (newState) => {
+  state = { ...state, ...newState }
+  fs.writeFileSync(STATE_PATH, JSON.stringify(state))
 }
 
-module.exports = Storage
+module.exports = {
+  getLastDate: () => state.lastDate,
+  setLastDate: (lastDate) => {
+    updateState({ lastDate })
+  }
+}
