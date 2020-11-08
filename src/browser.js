@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer')
 
 const OUTLOOK_PAGE = 'https://outlook.live.com/people/0'
 const NEW_CONTACT_TEXT = 'New contact'
+const EMAIL_INPUT_ID = 'PersonaEmails1-0'
 
 const getElementWithText = async (parent, tag, text) => {
   const [result] = await parent.$x(`//${tag}[contains(., '${text}')]`)
@@ -9,13 +10,13 @@ const getElementWithText = async (parent, tag, text) => {
 }
 
 class Browser {
-  constructor() {
-    console.log('Browser:constructor()')
+  constructor(browserWSEndpoint) {
+    this.browserWSEndpoint = browserWSEndpoint
   }
 
   async openOutlook() {
     const browser = await puppeteer.connect({
-      browserWSEndpoint: 'ws://127.0.0.1:9222/devtools/browser/05110622-7642-4fdc-9ec8-b4900e109b2d',
+      browserWSEndpoint: this.browserWSEndpoint,
       defaultViewport: null
     })
 
@@ -28,6 +29,10 @@ class Browser {
     console.log(`Createing contact with email: ${email}`)
     const [newContactButton] = await this.outlookPage.$x(`//button[contains(., '${NEW_CONTACT_TEXT}')]`)
     await newContactButton.click()
+
+    const emailInputSelector = `#${EMAIL_INPUT_ID}`
+    await this.outlookPage.waitForSelector(emailInputSelector)
+    await this.outlookPage.type(emailInputSelector, email, { delay: 20 })
   }
 
   openLinkedInSection() {
