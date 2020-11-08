@@ -3,10 +3,14 @@ const puppeteer = require('puppeteer')
 const OUTLOOK_PAGE = 'https://outlook.live.com/people/0'
 const NEW_CONTACT_TEXT = 'New contact'
 const EMAIL_INPUT_ID = 'PersonaEmails1-0'
+const CREATE_CONTACT_TEXT = 'Create'
+const LINKEDIN_TAB_TEXT = 'LinkedIn'
 
-const getElementWithText = async (parent, tag, text) => {
-  const [result] = await parent.$x(`//${tag}[contains(., '${text}')]`)
-  return result
+const clickButton = async (page, text) => {
+  const buttonXPath = `//button[contains(., '${text}')]`
+  await page.waitForXPath(buttonXPath)
+  const [button] = await page.$x(buttonXPath)
+  await button.click()
 }
 
 class Browser {
@@ -27,12 +31,16 @@ class Browser {
 
   async createContact(email) {
     console.log(`Createing contact with email: ${email}`)
-    const [newContactButton] = await this.outlookPage.$x(`//button[contains(., '${NEW_CONTACT_TEXT}')]`)
-    await newContactButton.click()
+    await clickButton(this.outlookPage, NEW_CONTACT_TEXT)
 
     const emailInputSelector = `#${EMAIL_INPUT_ID}`
     await this.outlookPage.waitForSelector(emailInputSelector)
     await this.outlookPage.type(emailInputSelector, email, { delay: 20 })
+
+    await clickButton(this.outlookPage, CREATE_CONTACT_TEXT)
+    await this.outlookPage.waitForSelector(emailInputSelector, { hidden: true })
+
+    await clickButton(this.outlookPage, LINKEDIN_TAB_TEXT)
   }
 
   openLinkedInSection() {
