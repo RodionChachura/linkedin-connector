@@ -62,17 +62,15 @@ class Business {
     console.log(`New users count: ${users.length}`)
     const orderedUsers = users
       .sort((a, b) => a.registrationDate - b.registrationDate)
-      // for testing
-      .slice(0, 1)
     await this.browser.openOutlook()
 
     for await (const user of orderedUsers) {
       await this.browser.createContact(user.email)
       await this.browser.openLinkedInSection()
-      const hasLinkedIn = await this.browser.isLinkedInProfileExists()
-      if (hasLinkedIn) {
+      const linkedInButton = await this.browser.getLinkedInButton()
+      if (linkedInButton) {
         const note = getNote(user.name, user.sets)
-        const linkedInProfile = await this.browser.connectOnLinkedIn(note)
+        const linkedInProfile = await this.browser.connectOnLinkedIn(linkedInButton, note)
         await setUserLinkedInProfile(user.id, linkedInProfile)
       }
       storage.setLastDate(user.registrationDate)
