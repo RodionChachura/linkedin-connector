@@ -12,8 +12,6 @@ const POSITIVE_LINKEDIN_TEXTS = [
 ]
 const MORE_TEXT = 'More…'
 const CONNECT_TEXT = 'Connect'
-const ADD_NOTE_TEXT = 'Add a note'
-const SEND_TEXT = 'Send'
 const NOTE_INPUT_ID = 'custom-message'
 
 const getButtonXPath = (text) => `//button[contains(., '${text}')]`
@@ -96,13 +94,16 @@ class Browser {
   async connectOnLinkedIn(button, note) {
     await button.click()
     const linkedInPage = await new Promise(x => this.browser.once('targetcreated', target => x(target.page())))
-    await waitForOneOfButtons(linkedInPage, CONNECT_TEXT, MORE_TEXT)
-    await linkedInPage.evaluate(pressConnectButton)
-
-    await linkedInPage.evaluate(pressAddNoteButton)
-    await enterText(linkedInPage, NOTE_INPUT_ID, note)
-    await linkedInPage.evaluate(pressSendButton)
-    await linkedInPage.waitForSelector(`#${NOTE_INPUT_ID}`, { hidden: true })
+    try {
+      await waitForOneOfButtons(linkedInPage, CONNECT_TEXT, MORE_TEXT)
+      await linkedInPage.evaluate(pressConnectButton)
+      await linkedInPage.evaluate(pressAddNoteButton)
+      await enterText(linkedInPage, NOTE_INPUT_ID, note)
+      await linkedInPage.evaluate(pressSendButton)
+      await linkedInPage.waitForSelector(`#${NOTE_INPUT_ID}`, { hidden: true })
+    } catch (err) {
+      console.log('Fail to connect: ', err)
+    }
 
     const url = linkedInPage.url()
     const splittedUrl = url.split('/')
