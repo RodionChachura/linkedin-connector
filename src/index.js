@@ -8,6 +8,11 @@ const browser = new Browser(browserWSEndpoint)
 
 const run = async () => {
   const users = await database.getNewUsers(storage.getLastDate())
+  if (!users.length) {
+    console.log('No new users')
+    return
+  }
+  
   console.log(`New users count: ${users.length}`)
   const orderedUsers = getOrderedUsers(users)
 
@@ -21,7 +26,6 @@ const run = async () => {
       const note = getNote(user)
       const linkedInProfile = await browser.connectOnLinkedIn(linkedInButton, note)
       await database.setUserLinkedInProfile(user.id, linkedInProfile)
-      console.log('Fail to connect: ', err)
     }
     storage.setLastDate(user.registrationDate)
   }
