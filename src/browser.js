@@ -83,11 +83,15 @@ class Browser {
   }
 
   async getLinkedInButton() {
-    const button = await waitForOneOfButtons(this.outlookPage, NO_LINKEDIN_PROFILE_TEXT, ...POSITIVE_LINKEDIN_TEXTS)
-    const text = await this.outlookPage.evaluate(e => e.textContent, button)
-    const isExists = POSITIVE_LINKEDIN_TEXTS.some(t => text.includes(t))
-    if (isExists) {
-      return button
+    try {
+      const button = await waitForOneOfButtons(this.outlookPage, NO_LINKEDIN_PROFILE_TEXT, ...POSITIVE_LINKEDIN_TEXTS)
+      const text = await this.outlookPage.evaluate(e => e.textContent, button)
+      const isExists = POSITIVE_LINKEDIN_TEXTS.some(t => text.includes(t))
+      if (isExists) {
+        return button
+      }
+    } catch (err) {
+      console.log(`Can't find the LinkedIn button`)
     }
   }
 
