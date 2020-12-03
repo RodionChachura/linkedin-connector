@@ -117,6 +117,10 @@ class Browser {
 
     return decodeURI(linkedInProfile)
   }
+
+  async close() {
+    await this.browser.close()
+  }
 }
 
 module.exports = Browser

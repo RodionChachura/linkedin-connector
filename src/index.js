@@ -29,6 +29,8 @@ const run = async () => {
     }
     storage.setLastDate(user.registrationDate)
   }
+
+  await browser.close()
 }
 
 run()

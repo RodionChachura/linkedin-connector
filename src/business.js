@@ -8,7 +8,7 @@ const NO_SETS_TEXTS = [
 ]
 
 const WITH_SETS_TEXTS = [
-  `I'm curious, what lead you to Increaser?`,
+  `I'm curious, what led you to Increaser?`,
   `I'm curious, what problems do you try to solve with Increaser?`,
   `I'm curious, what tool did you work with before you tried Increaser?`
 ]
