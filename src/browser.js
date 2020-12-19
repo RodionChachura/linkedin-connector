@@ -19,6 +19,7 @@ const getButtonXPath = (text) => `//button[contains(., '${text}')]`
 const enterText = async (page, inputId, text) => {
   const selector = `#${inputId}`
   await page.waitForSelector(selector)
+  await new Promise(r => setTimeout(r, 500))
   await page.type(selector, text, { delay: 20 })
 }
 

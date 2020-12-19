@@ -4,7 +4,8 @@ const getFirstName = (name) => {
 }
 
 const NO_SETS_TEXTS = [
-  `I'm curious, what didn't you like about Increaser?`
+  `I'm curious, what didn't you like about Increaser?`,
+  `I saw that you signed up in Increaser but didn't use it. Is the app didn't match your expectations?`
 ]
 
 const WITH_SETS_TEXTS = [
